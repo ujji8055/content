@@ -1386,9 +1386,8 @@ def create_test_file(is_nightly, skip_save=False, path_to_pack=''):
             files_string = tools.run_command("git diff --name-status origin/master...{0}".format(branch_name))
             # Checks if the build is for contributor PR and if so add it's pack.
             if os.getenv('CONTRIB_BRANCH'):
-                # packs_diff = tools.run_command("git diff --name-status HEAD -- Packs")
-                new_packs = tools.run_command('git status -uall --porcelain -- Packs').replace('??', 'A')
-                files_string = '\n'.join([files_string, new_packs])
+                packs_diff = tools.run_command('git status -uall --porcelain -- Packs').replace('??', 'A')
+                files_string = '\n'.join([files_string, packs_diff])
         else:
             commit_string = tools.run_command("git log -n 2 --pretty='%H'")
             logging.debug(f'commit string: {commit_string}')
