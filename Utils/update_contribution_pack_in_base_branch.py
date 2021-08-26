@@ -38,7 +38,7 @@ def get_pr_files(pr_number: str) -> Iterable[str]:
     page = 1
     while True:
         response = requests.get(f'https://api.github.com/repos/demisto/content/pulls/{pr_number}/files',
-                                params={'page': str(page)})
+                                params={'page': str(page)}, verify=False)
         response.raise_for_status()
         files = response.json()
         if not files:
@@ -69,7 +69,7 @@ def get_files_from_github(username: str, branch: str, pr_number: str) -> List[st
         if not os.path.isdir(abs_dir):
             os.makedirs(abs_dir)
         with open(abs_file_path, 'wb') as changed_file:
-            with requests.get(urljoin(base_url, file_path), stream=True) as file_content:
+            with requests.get(urljoin(base_url, file_path), stream=True, verify=False) as file_content:
                 file_content.raise_for_status()
                 for data in file_content.iter_content(chunk_size=chunk_size):
                     changed_file.write(data)
