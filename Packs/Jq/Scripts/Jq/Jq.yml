@@ -1,0 +1,27 @@
+args:
+- description: JSON object
+  name: value
+- description: jq query
+  name: query
+comment: use jq to query a JSON object
+commonfields:
+  id: JsonJq
+  version: -1
+dockerimage: demisto/jq:1.0.0.24022
+enabled: true
+name: JsonJq
+outputs:
+- contextPath: JQ
+  description: Extracted data from JQ
+runas: DBotWeakRole
+runonce: false
+script: ''
+scripttarget: 0
+subtype: python3
+tags:
+- transformer
+- filter
+type: python
+fromversion: 6.0.0
+tests:
+- No tests (auto formatted)
