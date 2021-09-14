@@ -935,7 +935,7 @@ def main() -> None:
             'sta-get-logs': get_logs_sta_command,
             'sta-validate-tenant': validate_tenant_sta_command,
         }
-
+        # working on new use-case.
         command = demisto.command()
 
         if command in commands:
