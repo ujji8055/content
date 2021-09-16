@@ -551,6 +551,145 @@ class Client(BaseClient):
             url_suffix='/authorized'
         )
 
+    # Get list of all the applications in the tenant.
+    def get_application_list_sta(self, limit=None):
+
+        uri = '/applications'
+        if limit:
+            limit = self.validate_limit_sta(limit)
+            if limit <= 100:
+                query_params = (
+                    ('pageIndex', 0),
+                    ('pageSize', limit),
+                )
+                return self.http_request(
+                    method='GET',
+                    url_suffix=uri,
+                    params=query_params,
+                ).json()['page']['items']
+            else:
+                return self.get_paged_results_sta(uri=uri, limit=limit)
+        else:
+            return self.get_paged_results_sta(uri=uri)
+
+    # Returns basic information of an application if exist in the tenant.
+    def get_basic_application_info_sta(self, applicationName):
+
+        self.validate_mandatory_argument_sta(fields={"applicationName": applicationName})
+        response = self.http_request(
+            method='GET',
+            url_suffix='/applications',
+        )
+        paged_results = response.json()['page']['items']
+        while "next" in response.json()['links'] and len(response.json()['page']['items']) > 0:
+            next_page = response.json()['links']["next"]
+            response = self.http_request(
+                method="GET",
+                full_url=next_page,
+                url_suffix='',
+            )
+            paged_results += response.json()['page']['items']
+        for application in paged_results:
+            if application['name'] == applicationName:
+                return application
+        raise Exception(f'The application - {application} was not found.')
+
+    # Get application id of an application.
+    def get_application_id_sta(self, applicationName):
+
+        return self.get_basic_application_info_sta(applicationName=applicationName)['id']
+
+    # Get information for a specific application.
+    def get_application_info_sta(self, applicationName):
+
+        application_id = self.get_application_id_sta(applicationName=applicationName)
+        response = self.http_request(
+            method="GET",
+            url_suffix=urljoin('/applications/', quote_plus(application_id))
+        ).json()
+
+        context_data = {
+            'id': response['id'],
+            'name': response['name'],
+            'status': response['status'],
+            'applicationType': response['applicationType'],
+            'templateName': response['templateName'],
+            'assignment': response['assignment'],
+            'schemaVersionNumber': response['schemaVersionNumber'],
+            'lastModified': response['lastModified']
+        }
+        readable_output = dict(context_data)
+        if 'everyone' in readable_output['assignment']:
+            if readable_output['assignment']['everyone'] is True:
+                readable_output['assignment'] = 'Everyone'
+            else:
+                readable_output['assignment'] = 'None'
+
+        elif 'groups' in readable_output['assignment']:
+            readable_output['assignment'] = ', '.join(readable_output['assignment']['groups'])
+
+        return readable_output, context_data
+
+    # Get the list of applications assigned to a user.
+    def get_user_applications_sta(self, userName, limit=None):
+
+        user_id = self.get_user_id_sta(userName=userName)
+        uri = urljoin(urljoin('/users/', quote_plus(user_id)), '/applications')
+
+        if limit:
+            limit = self.validate_limit_sta(limit)
+            if limit <= 1000:
+                query_params = (
+                    ('pageIndex', 0),
+                    ('pageSize', limit),
+                )
+                return self.http_request(
+                    method='GET',
+                    url_suffix=uri,
+                    params=query_params,
+                ).json()['page']['items']
+
+            else:
+                return self.get_paged_results_sta(uri=uri, limit=limit)
+
+        else:
+            return self.get_paged_results_sta(uri=uri)
+
+    # Returns output data for group members.
+    def user_applications_data(self, userName, limit=None):
+
+        response = self.get_user_applications_sta(userName=userName, limit=limit)
+        data = self.get_user_info_sta(userName=userName)
+        data['applications'] = response
+
+        return response, data
+
+    # Get the sessions for a specific user.
+    def get_user_sessions_sta(self, userName):
+
+        user_id = self.get_user_id_sta(userName=userName)
+        uri = urljoin(urljoin('/users/', quote_plus(user_id)), '/sessions')
+
+        return self.http_request(
+            method='GET',
+            url_suffix=uri,
+        ).json()['sessions']
+
+    # Returns output data for group members.
+    def user_sessions_data(self, userName):
+
+        response = self.get_user_sessions_sta(userName=userName)
+        data = self.get_user_info_sta(userName=userName)
+        data['sessions'] = response
+
+        return response, data
+
+
+
+
+
+
+
 
 ''' COMMAND FUNCTIONS '''
 
@@ -887,6 +1026,102 @@ def validate_tenant_sta_command(client: Client, args: Dict[str, Any]) -> Command
     )
 
 
+def get_application_list_sta_command(client: Client, args: Dict[str, Any]) -> CommandResults:
+    """ Function for sta-get-application-list command. Get list of all the applications in the tenant. """
+
+    response = client.get_application_list_sta(limit=args.get('limit'))
+    if not response:
+        return CommandResults(
+            readable_output=NO_RESULT_MSG,
+        )
+    header_sequence = ["id", "name", "status"]
+    return CommandResults(
+        readable_output=tableToMarkdown("List of applications in the tenant :", response, headers=header_sequence,
+                                        headerTransform=pascalToSpace, removeNull=True),
+        outputs_prefix='STA.APPLICATION',
+        outputs_key_field=['id'],
+        outputs=response
+    )
+
+
+def get_application_info_sta_command(client: Client, args: Dict[str, Any]) -> CommandResults:
+    """ Function for sta-get-application-info command. Get profile information of a specific application."""
+
+    readable_output, context_data = client.get_application_info_sta(applicationName=args.get('applicationName'))
+    if not context_data:
+        return CommandResults(
+            readable_output=NO_RESULT_MSG,
+        )
+    header_sequence = ["id", "name", "status", "applicationType", "templateName", "assignment", "schemaVersionNumber",
+                       "lastModified"]
+
+    return CommandResults(
+        readable_output=tableToMarkdown(f"Information of application - {args.get('applicationName')} :",
+                                        readable_output, headers=header_sequence, headerTransform=pascalToSpace,
+                                        removeNull=True),
+        outputs_prefix='STA.APPLICATION',
+        outputs_key_field=['id'],
+        outputs=context_data
+    )
+
+
+def get_user_applications_sta_command(client: Client, args: Dict[str, Any]) -> CommandResults:
+    """ Function for sta-get-user-applications. Get all the applications associated with a specific user. """
+
+    response, output_data = client.user_applications_data(userName=args.get('userName'), limit=args.get('limit'))
+    if not response:
+        return CommandResults(
+            readable_output=NO_RESULT_MSG,
+        )
+    header_sequence = ["id", "name", "status"]
+    return CommandResults(
+        readable_output=tableToMarkdown(
+            f"Applications associated with user - {args.get('userName')} : ", response, headers=header_sequence,
+            headerTransform=pascalToSpace, removeNull=True),
+        outputs_prefix='STA.USER',
+        outputs_key_field=['id'],
+        outputs=output_data
+    )
+
+
+def get_user_sessions_sta_command(client: Client, args: Dict[str, Any]) -> CommandResults:
+    """ Function for sta-get-user-sessions command. Get all the sessions associated with a specific user. """
+
+    response, output_data = client.user_sessions_data(userName=args.get('userName'))
+    if not response:
+        return CommandResults(
+            readable_output=NO_RESULT_MSG,
+        )
+
+    session_header = ["id", "start", "expiry"]
+    session_data = tableToMarkdown(
+        f"Sessions associated with user - {args.get('userName')} : ", response, headers=session_header,
+        headerTransform=pascalToSpace, removeNull=True)
+
+    return CommandResults(
+        readable_output=session_data,
+        outputs_prefix='STA.USER',
+        outputs_key_field=['id'],
+        outputs=output_data
+    )
+
+
+def delete_user_sessions_sta_command(client: Client, args: Dict[str, Any]) -> CommandResults:
+    """ Function for sta-delete-user-sessions command. Delete all the IDP sessions associated with a specific user. """
+
+    response = client.delete_sessions_sta(userName=args.get('userName'))
+    if not response:
+        return CommandResults(
+            readable_output=NO_RESULT_MSG,
+        )
+    return CommandResults(
+        readable_output=f"## IDP Sessions for the user - {args.get('userName')} successfully deleted.",
+        outputs_prefix='STA.USER',
+        outputs_key_field=['id'],
+        outputs=response
+    )
+
+
 ''' MAIN FUNCTION '''
 
 
@@ -934,8 +1169,13 @@ def main() -> None:
             'sta-remove-user-group': remove_user_group_sta_command,
             'sta-get-logs': get_logs_sta_command,
             'sta-validate-tenant': validate_tenant_sta_command,
+            'sta-get-application-list': get_application_list_sta_command,
+            'sta-get-application-info': get_application_info_sta_command,
+            'sta-get-user-applications': get_user_applications_sta_command,
+            'sta-get-user-sessions': get_user_sessions_sta_command,
+            'sta-delete-user-sessions': delete_user_sessions_sta_command
         }
-        # working on new use-case.
+
         command = demisto.command()
 
         if command in commands:
