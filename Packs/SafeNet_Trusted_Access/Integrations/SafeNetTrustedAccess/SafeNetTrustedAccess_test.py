@@ -302,7 +302,7 @@ user_applications_response = [
 user_applications_context = {
     "email": "test.user@demisto.com",
     "firstName": "Hello",
-    "groups": [
+    "applications": [
         {
             "id": "01985260-d205-41cc-9b77-61686688b288",
             "name": "Application1",
@@ -322,6 +322,52 @@ user_applications_context = {
 }
 user_applications_data = (user_applications_response, user_applications_context)
 
+user_sessions_readable = {
+    "sessions": [
+        {
+            "id": "9b4c9ae7-a8b8-4ae8-a419-52ffb6c266d6",
+            "start": 1607472514000,
+            "expiry": 1607472526000,
+            "applications": ["Application1", "Application2"]
+        }
+    ]
+}
+
+user_sessions_context = {
+    "email": "test.user@demisto.com",
+    "firstName": "Hello",
+    "id": "CNlM6rvB0uQDXA4rWyUAAAAc",
+    "isSynchronized": False,
+    "lastName": "User",
+    "schemaVersionNumber": "1.0",
+    "userName": "hellouser",
+    "sessions": [
+        {
+            "id": "9b4c9ae7-a8b8-4ae8-a419-52ffb6c266d6",
+            "start": 1607472514000,
+            "expiry": 1607472526000,
+            "applications": [
+                {
+                    "id": "entity_id1",
+                    "name": "Application1"
+                },
+                {
+                    "id": "entity_id2",
+                    "name": "Application2"
+                }
+            ]
+        }
+    ]
+}
+user_sessions_data = (user_sessions_readable, user_applications_context)
+
+delete_sessions = {
+    "id": "CNlM6rvB0uQDXA4rWyUAAAAc",
+    "userName": "hellouser",
+    "sessions": {
+        "Deleted": True
+    }
+}
 
 ''' TEST COMMAND FUNCTIONS '''
 
@@ -743,3 +789,38 @@ def test_get_user_applications_sta_command(mocker, args, expected_output, expect
     assert 'Application1' in response.readable_output
     assert 'Application2' in response.readable_output
 
+
+# Tests sta-get-user-sessions command function.
+@pytest.mark.parametrize(
+    "args, expected_output, expected_readable",
+    [
+        ({'userName': 'hellouser'}, user_sessions_context, user_sessions_readable)
+    ])
+def test_get_user_sessions_sta_command(mocker, args, expected_output, expected_readable):
+
+    from SafeNetTrustedAccess import get_user_sessions_sta_command
+
+    mocker.patch.object(client, 'user_sessions_data', return_value=user_sessions_data)
+    response = get_user_sessions_sta_command(client, args)
+
+    assert response.outputs_prefix == 'STA.USER'
+    assert 'hellouser' in response.readable_output
+    assert 'Sessions' in response.readable_output
+
+
+# Tests sta-delete-user-sessions command function.
+@pytest.mark.parametrize(
+    "args, expected_output",
+    [
+        ({'userName': 'hellouser'}, delete_sessions)
+    ])
+def test_delete_user_sessions_sta_command(mocker, args, expected_output):
+
+    from SafeNetTrustedAccess import delete_user_sessions_sta_command
+
+    mocker.patch.object(client, 'delete_sessions_sta', return_value=delete_sessions)
+    response = delete_user_sessions_sta_command(client, args)
+
+    assert response.outputs_prefix == 'STA.USER'
+    assert 'hellouser' in response.readable_output
+    assert 'deleted' in response.readable_output
