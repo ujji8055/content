@@ -630,10 +630,9 @@ class Client(BaseClient):
         readable_output = dict(context_data)
         if 'everyone' in readable_output['assignment']:
             if readable_output['assignment']['everyone'] is True:
-                readable_output['assignment'] = 'Everyone'
+                readable_output['assignment'] = 'All'
             else:
                 readable_output['assignment'] = 'None'
-
         elif 'groups' in readable_output['assignment']:
             readable_output['assignment'] = ', '.join(readable_output['assignment']['groups'])
 
@@ -1125,7 +1124,6 @@ def get_user_sessions_sta_command(client: Client, args: Dict[str, Any]) -> Comma
         return CommandResults(
             readable_output=NO_RESULT_MSG,
         )
-
     session_header = ["id", "start", "expiry", "applications"]
     session_data = tableToMarkdown(
         f"Sessions associated with user - {args.get('userName')} : ", response, headers=session_header,

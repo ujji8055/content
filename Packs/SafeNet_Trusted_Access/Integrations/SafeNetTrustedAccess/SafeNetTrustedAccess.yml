@@ -918,9 +918,6 @@ script:
     - contextPath: STA.USER.USERNAME
       description: Username of the user.
       type: string
-    - contextPath: STA.USER.SESSION.ID
-      description: Session ID for the user.
-      type: string
     - contextPath: STA.USER.SESSION.DELETED
       description: Returns true, if the user session deleted for an application.
       type: boolean
