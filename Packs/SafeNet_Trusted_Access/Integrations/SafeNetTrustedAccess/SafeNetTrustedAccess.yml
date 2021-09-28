@@ -909,7 +909,7 @@ script:
     - description: Username of the user.
       name: userName
       required: true
-    description: Delete all the active sessions for a specific user from STA.
+    description: Delete all the active SSO sessions for a specific user from the STA.
     name: sta-delete-user-sessions
     outputs:
     - contextPath: STA.USER.ID
@@ -919,7 +919,7 @@ script:
       description: Username of the user.
       type: string
     - contextPath: STA.USER.SESSION.DELETED
-      description: Returns true, if the user session deleted for an application.
+      description: Returns true, if all the user SSO sessions deleted successfully.
       type: boolean
   dockerimage: demisto/python3:3.9.7.24076
   runonce: false

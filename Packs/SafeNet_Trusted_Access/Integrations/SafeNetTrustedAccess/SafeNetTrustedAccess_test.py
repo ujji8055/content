@@ -768,7 +768,7 @@ def test_get_application_info_sta_command(mocker, args, expected_output, expecte
     response = get_application_info_sta_command(client, args)
 
     assert response.outputs_prefix == 'STA.APPLICATION'
-    assert response.outputs['applicationName'] == args['applicationName']
+    assert args['applicationName'] in response.readable_output
     assert 'Application1' in response.readable_output
 
 
