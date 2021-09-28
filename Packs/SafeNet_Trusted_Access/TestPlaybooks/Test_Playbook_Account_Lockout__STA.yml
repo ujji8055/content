@@ -1,0 +1,114 @@
+id: Test Playbook Account Lockout  STA
+version: -1
+name: Test Playbook Account Lockout  STA
+description: This is a test playbook for SafeNet Trusted Access - Terminate User SSO
+  Sessions.
+starttaskid: "0"
+tasks:
+  "0":
+    id: "0"
+    taskid: 7d4cd681-796e-479b-8400-073554d29e6e
+    type: start
+    task:
+      id: 7d4cd681-796e-479b-8400-073554d29e6e
+      version: -1
+      name: ""
+      iscommand: false
+      brand: ""
+      description: ''
+    nexttasks:
+      '#none#':
+      - "3"
+    separatecontext: false
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 50
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+  "2":
+    id: "2"
+    taskid: 7ee53b57-bfcf-4bc8-8799-8c047885dcad
+    type: title
+    task:
+      id: 7ee53b57-bfcf-4bc8-8799-8c047885dcad
+      version: -1
+      name: Done
+      type: title
+      iscommand: false
+      brand: ""
+      description: ''
+    separatecontext: false
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 370
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+  "3":
+    id: "3"
+    taskid: 7d5c5929-c4b6-4f95-8259-2901f4a11e23
+    type: playbook
+    task:
+      id: 7d5c5929-c4b6-4f95-8259-2901f4a11e23
+      version: -1
+      name: SafeNet Trusted Access - Terminate User SSO Sessions
+      playbookName: SafeNet Trusted Access - Terminate User SSO Sessions
+      type: playbook
+      iscommand: false
+      brand: ""
+      description: ''
+    nexttasks:
+      '#none#':
+      - "2"
+    scriptarguments:
+      instanceName:
+        simple: SpeDemo_Instance_1
+      userName:
+        simple: hellouser
+    separatecontext: true
+    loop:
+      iscommand: false
+      exitCondition: ""
+      wait: 1
+      max: 100
+    view: |-
+      {
+        "position": {
+          "x": 50,
+          "y": 190
+        }
+      }
+    note: false
+    timertriggers: []
+    ignoreworker: false
+    skipunavailable: false
+    quietmode: 0
+view: |-
+  {
+    "linkLabelsPosition": {},
+    "paper": {
+      "dimensions": {
+        "height": 385,
+        "width": 380,
+        "x": 50,
+        "y": 50
+      }
+    }
+  }
+inputs: []
+outputs: []
+sourceplaybookid: Test Playbook STA
+fromversion: 6.0.0
