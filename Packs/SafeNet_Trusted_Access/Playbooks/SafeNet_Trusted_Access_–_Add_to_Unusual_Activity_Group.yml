@@ -793,7 +793,7 @@ tasks:
       safenettrustedaccessunusualactivitygroup:
         simple: ${inputs.unusualActivityGroup}
       safenettrustedaccessuserinunusualactivitygrouphours:
-        simple: ${lists.sta_user_in_unusual_activity_group_hours}
+        simple: ${inputs.sleepTime}
       severity:
         simple: "2"
       sla:
