@@ -1,4 +1,4 @@
-This playbook terminates user's SSO sessions so that upon the next login attempt following the unlocking of the account, authentication is required.
+This playbook terminates user SSO sessions so that upon the next login attempt following the unlocking of the account, authentication is required.
 
 ## Dependencies
 This playbook uses the following sub-playbooks, integrations, and scripts.
@@ -10,24 +10,25 @@ This playbook does not use any sub-playbooks.
 * SafeNetTrustedAccess
 
 ### Scripts
-* PrintErrorEntry
 * IsIntegrationAvailable
+* Sleep
+* PrintErrorEntry
 
 ### Commands
-* sta-get-user-info
-* sta-validate-tenant
-* sta-delete-user-sessions
 * setIncident
-* closeInvestigation
+* sta-delete-user-sessions
 * sta-get-user-sessions
+* closeInvestigation
+* sta-validate-tenant
+* sta-get-user-info
 
 ## Playbook Inputs
 ---
 
 | **Name** | **Description** | **Default Value** | **Required** |
 | --- | --- | --- | --- |
-| userName | Username of the user. | ${incident.safenettrustedaccessusername} | Required |
-| instanceName | Name of the SafeNet Trusted Access integration instance. | ${incident.safenettrustedaccessinstancename} | Required |
+| UserName | Username of the user. | ${incident.safenettrustedaccessusername} | Required |
+| InstanceName | Name of the SafeNet Trusted Access integration instance. | ${incident.safenettrustedaccessinstancename} | Required |
 
 ## Playbook Outputs
 ---

@@ -1,15 +1,15 @@
-description: This playbook terminates user's SSO sessions so that upon the next login
+description: This playbook terminates user SSO sessions so that upon the next login
   attempt following the unlocking of the account, authentication is required.
 id: SafeNet Trusted Access - Terminate User SSO Sessions
 inputs:
 - description: Username of the user.
-  key: userName
+  key: UserName
   playbookInputQuery:
   required: true
   value:
     simple: ${incident.safenettrustedaccessusername}
 - description: Name of the SafeNet Trusted Access integration instance.
-  key: instanceName
+  key: InstanceName
   playbookInputQuery:
   required: true
   value:
@@ -30,12 +30,12 @@ tasks:
     skipunavailable: false
     task:
       brand: ""
-      id: 83e81935-1505-40c1-8511-ec17fb38c693
+      id: 84607519-8e76-42a1-88c7-f291b8f5bb0c
       iscommand: false
       name: ""
       version: -1
       description: ''
-    taskid: 83e81935-1505-40c1-8511-ec17fb38c693
+    taskid: 84607519-8e76-42a1-88c7-f291b8f5bb0c
     timertriggers: []
     type: start
     view: |-
@@ -68,20 +68,20 @@ tasks:
     task:
       brand: Builtin
       description: commands.local.cmd.close.inv
-      id: 63ce666b-0f70-41b8-83a8-91bd2908dbae
+      id: 2f0a6b67-6afe-4592-8cf3-92740566a354
       iscommand: true
-      name: Close incident
+      name: Close Incident.
       script: Builtin|||closeInvestigation
       type: regular
       version: -1
-    taskid: 63ce666b-0f70-41b8-83a8-91bd2908dbae
+    taskid: 2f0a6b67-6afe-4592-8cf3-92740566a354
     timertriggers: []
     type: regular
     view: |-
       {
         "position": {
-          "x": 1350,
-          "y": 1945
+          "x": 1340,
+          "y": 2100
         }
       }
   "22":
@@ -96,23 +96,23 @@ tasks:
     scriptarguments:
       userName:
         complex:
-          root: inputs.userName
+          root: inputs.UserName
           transformers:
           - operator: trim
       using:
-        simple: ${inputs.instanceName}
+        simple: ${inputs.InstanceName}
     separatecontext: false
     skipunavailable: false
     task:
       brand: ""
       description: Get the profile information for a specific user.
-      id: 5c3cfd0d-c26c-4467-85ce-b787d5245e97
+      id: 2bfef1ee-9104-4bba-8d2b-7700e7d3d369
       iscommand: true
-      name: Get User Information
+      name: Get User Information.
       script: '|||sta-get-user-info'
       type: regular
       version: -1
-    taskid: 5c3cfd0d-c26c-4467-85ce-b787d5245e97
+    taskid: 2bfef1ee-9104-4bba-8d2b-7700e7d3d369
     timertriggers: []
     type: regular
     view: |-
@@ -144,13 +144,13 @@ tasks:
     skipunavailable: false
     task:
       brand: ""
-      description: Check if the user exist in the tenant.
-      id: ac2f1e91-b163-4d37-8702-22f30d065dcc
+      description: Check if the user exists in the tenant.
+      id: 8e8b4f02-1728-422d-851e-0553429a503b
       iscommand: false
       name: User exist in the tenant ?
       type: condition
       version: -1
-    taskid: ac2f1e91-b163-4d37-8702-22f30d065dcc
+    taskid: 8e8b4f02-1728-422d-851e-0553429a503b
     timertriggers: []
     type: condition
     view: |-
@@ -170,26 +170,26 @@ tasks:
     quietmode: 0
     scriptarguments:
       message:
-        simple: User - ${inputs.userName} doesn't exist in the tenant.
+        simple: User - ${inputs.UserName} doesn't exist in the tenant.
     separatecontext: false
     skipunavailable: false
     task:
       brand: ""
       description: Prints an error entry with a given message.
-      id: f2a19f98-614b-438c-80e8-b5900ca15f9c
+      id: 56fee624-e95d-4532-86a4-2f2f74346bd0
       iscommand: false
       name: Failed Message
       script: PrintErrorEntry
       type: regular
       version: -1
-    taskid: f2a19f98-614b-438c-80e8-b5900ca15f9c
+    taskid: 56fee624-e95d-4532-86a4-2f2f74346bd0
     timertriggers: []
     type: regular
     view: |-
       {
         "position": {
-          "x": 2200,
-          "y": 1945
+          "x": 2190,
+          "y": 2100
         }
       }
   "30":
@@ -215,20 +215,20 @@ tasks:
     task:
       brand: Builtin
       description: commands.local.cmd.close.inv
-      id: 71e9cbbe-2117-4883-86e7-90f34d7f2868
+      id: cbd858b1-f1af-4f24-838d-e6aa53dc88dd
       iscommand: true
       name: Close Incident.
       script: Builtin|||closeInvestigation
       type: regular
       version: -1
-    taskid: 71e9cbbe-2117-4883-86e7-90f34d7f2868
+    taskid: cbd858b1-f1af-4f24-838d-e6aa53dc88dd
     timertriggers: []
     type: regular
     view: |-
       {
         "position": {
-          "x": 910,
-          "y": 1945
+          "x": 900,
+          "y": 2100
         }
       }
   "31":
@@ -242,19 +242,19 @@ tasks:
     quietmode: 0
     scriptarguments:
       using:
-        simple: ${inputs.instanceName}
+        simple: ${inputs.InstanceName}
     separatecontext: false
     skipunavailable: false
     task:
       brand: ""
       description: Checks whether you have permission to access the requested tenant.
-      id: 1a5fd183-bd1c-4523-83b8-f94c2129b6c3
+      id: 3b6bdf23-e9d2-4eee-8c60-df43cd5a5694
       iscommand: true
       name: Validate tenant.
       script: '|||sta-validate-tenant'
       type: regular
       version: -1
-    taskid: 1a5fd183-bd1c-4523-83b8-f94c2129b6c3
+    taskid: 3b6bdf23-e9d2-4eee-8c60-df43cd5a5694
     timertriggers: []
     type: regular
     view: |-
@@ -291,13 +291,13 @@ tasks:
     skipunavailable: false
     task:
       brand: ""
-      description: Check permission of the tenant.
-      id: 42acd304-90ae-480c-852e-125907e8e230
+      description: Check permissions of the tenant.
+      id: 5713411d-8bbf-43a9-83f5-27689bb85ed1
       iscommand: false
       name: Check if tenant is accessible?
       type: condition
       version: -1
-    taskid: 42acd304-90ae-480c-852e-125907e8e230
+    taskid: 5713411d-8bbf-43a9-83f5-27689bb85ed1
     timertriggers: []
     type: condition
     view: |-
@@ -327,23 +327,24 @@ tasks:
     task:
       brand: ""
       description: Prints an error entry with a given message.
-      id: 68b6de9e-f633-43af-8816-bee01acf3ab1
+      id: 91bb76e7-d12a-4acb-8ca2-d8a9cfbfc92f
       iscommand: false
       name: Failed Message
       script: PrintErrorEntry
       type: regular
       version: -1
-    taskid: 68b6de9e-f633-43af-8816-bee01acf3ab1
+    taskid: 91bb76e7-d12a-4acb-8ca2-d8a9cfbfc92f
     timertriggers: []
     type: regular
     view: |-
       {
         "position": {
-          "x": 480,
-          "y": 1945
+          "x": 490,
+          "y": 2100
         }
       }
   "34":
+    continueonerror: true
     id: "34"
     ignoreworker: false
     nexttasks:
@@ -355,19 +356,19 @@ tasks:
       severity:
         simple: "2"
       sla:
-        simple: "1"
+        simple: "3"
     separatecontext: false
     skipunavailable: false
     task:
       brand: Builtin
       description: commands.local.cmd.set.incident
-      id: f83a6a8f-6275-4334-8b5e-566abe004201
+      id: 8da30ec8-a362-4657-863a-c4d759f6a594
       iscommand: true
-      name: Set Incident Fields
+      name: Set Incident Fields.
       script: Builtin|||setIncident
       type: regular
       version: -1
-    taskid: f83a6a8f-6275-4334-8b5e-566abe004201
+    taskid: 8da30ec8-a362-4657-863a-c4d759f6a594
     timertriggers: []
     type: regular
     view: |-
@@ -397,13 +398,13 @@ tasks:
       brand: ""
       description: Returns 'yes' if integration brand is available. Otherwise returns
         'no'
-      id: 083b2970-6f37-4f5f-8459-d15a1b2c9cdb
+      id: bad7d390-d7ac-4635-87a9-24240a1ee6e0
       iscommand: false
-      name: Is Integration Available
+      name: Is Integration Available?
       script: IsIntegrationAvailable
       type: condition
       version: -1
-    taskid: 083b2970-6f37-4f5f-8459-d15a1b2c9cdb
+    taskid: bad7d390-d7ac-4635-87a9-24240a1ee6e0
     timertriggers: []
     type: condition
     view: |-
@@ -429,20 +430,20 @@ tasks:
     task:
       brand: ""
       description: Prints an error entry with a given message
-      id: e0a26a2e-4a6c-4856-890c-b92886c310cf
+      id: d973b1b6-d152-438f-8b08-02a6582b0317
       iscommand: false
       name: Failed Message
       script: PrintErrorEntry
       type: regular
       version: -1
-    taskid: e0a26a2e-4a6c-4856-890c-b92886c310cf
+    taskid: d973b1b6-d152-438f-8b08-02a6582b0317
     timertriggers: []
     type: regular
     view: |-
       {
         "position": {
-          "x": 50,
-          "y": 1945
+          "x": 70,
+          "y": 2100
         }
       }
   "37":
@@ -454,20 +455,20 @@ tasks:
     skipunavailable: false
     task:
       brand: ""
-      id: 673a384a-f9b0-4769-8c0d-2aa93bd4be98
+      id: 523a44b4-e5f5-481b-8eb9-62be061f4a22
       iscommand: false
       name: Done
       type: title
       version: -1
       description: ''
-    taskid: 673a384a-f9b0-4769-8c0d-2aa93bd4be98
+    taskid: 523a44b4-e5f5-481b-8eb9-62be061f4a22
     timertriggers: []
     type: title
     view: |-
       {
         "position": {
-          "x": 1125,
-          "y": 2120
+          "x": 1140,
+          "y": 2300
         }
       }
   "38":
@@ -480,21 +481,21 @@ tasks:
     quietmode: 0
     scriptarguments:
       userName:
-        simple: ${inputs.userName}
+        simple: ${inputs.UserName}
       using:
-        simple: ${inputs.instanceName}
+        simple: ${inputs.InstanceName}
     separatecontext: false
     skipunavailable: false
     task:
       brand: ""
       description: Get sessions for a specific user.
-      id: 340ecc55-15a9-4253-8346-51c9337c4aac
+      id: 685acc9c-72ec-4ae6-8581-b79f759d8b39
       iscommand: true
       name: Get SSO sessions.
       script: '|||sta-get-user-sessions'
       type: regular
       version: -1
-    taskid: 340ecc55-15a9-4253-8346-51c9337c4aac
+    taskid: 685acc9c-72ec-4ae6-8581-b79f759d8b39
     timertriggers: []
     type: regular
     view: |-
@@ -525,7 +526,7 @@ tasks:
     ignoreworker: false
     nexttasks:
       '#default#':
-      - "30"
+      - "44"
       "yes":
       - "40"
     note: false
@@ -535,12 +536,12 @@ tasks:
     task:
       brand: ""
       description: Check for active SSO sessions.
-      id: 8a14541b-91c7-45f4-8d82-e48626a589d4
+      id: bcfe779f-f184-4954-8c19-f6f6acceaf0b
       iscommand: false
       name: Check for active SSO sessions.
       type: condition
       version: -1
-    taskid: 8a14541b-91c7-45f4-8d82-e48626a589d4
+    taskid: bcfe779f-f184-4954-8c19-f6f6acceaf0b
     timertriggers: []
     type: condition
     view: |-
@@ -560,21 +561,21 @@ tasks:
     quietmode: 0
     scriptarguments:
       userName:
-        simple: ${inputs.userName}
+        simple: ${inputs.UserName}
       using:
-        simple: ${inputs.instanceName}
+        simple: ${inputs.InstanceName}
     separatecontext: false
     skipunavailable: false
     task:
       brand: ""
       description: Delete all the active sessions for a specific user from STA.
-      id: 4d646224-200e-4c1d-8552-d45de9960adc
+      id: e1cb09cb-8e2f-453a-822e-1b5554d4e9c9
       iscommand: true
       name: Terminate all active SSO sessions.
       script: '|||sta-delete-user-sessions'
       type: regular
       version: -1
-    taskid: 4d646224-200e-4c1d-8552-d45de9960adc
+    taskid: e1cb09cb-8e2f-453a-822e-1b5554d4e9c9
     timertriggers: []
     type: regular
     view: |-
@@ -612,7 +613,7 @@ tasks:
       '#default#':
       - "42"
       "yes":
-      - "15"
+      - "43"
     note: false
     quietmode: 0
     separatecontext: false
@@ -620,12 +621,12 @@ tasks:
     task:
       brand: ""
       description: Check if all SSO sessions successfully deleted.
-      id: 4840696e-cd7c-4bfe-8362-d594e5402607
+      id: 7ed47cee-83c4-433d-87d9-5b8d69b7c90a
       iscommand: false
       name: All the SSO sessions successfully deleted?
       type: condition
       version: -1
-    taskid: 4840696e-cd7c-4bfe-8362-d594e5402607
+    taskid: 7ed47cee-83c4-433d-87d9-5b8d69b7c90a
     timertriggers: []
     type: condition
     view: |-
@@ -651,20 +652,84 @@ tasks:
     task:
       brand: ""
       description: Prints an error entry with a given message
-      id: bc398bcd-c745-4fdf-87c4-1919cf1c67bc
+      id: c3df515e-75cb-4d04-8794-48fef12d60a2
       iscommand: false
-      name: Failed message.
+      name: Failed Message.
       script: PrintErrorEntry
       type: regular
       version: -1
-    taskid: bc398bcd-c745-4fdf-87c4-1919cf1c67bc
+    taskid: c3df515e-75cb-4d04-8794-48fef12d60a2
     timertriggers: []
     type: regular
     view: |-
       {
         "position": {
           "x": 1770,
-          "y": 1945
+          "y": 2100
+        }
+      }
+  "43":
+    id: "43"
+    ignoreworker: false
+    nexttasks:
+      '#none#':
+      - "15"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      seconds:
+        simple: "120"
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Sleep for X seconds
+      id: b3ccc3f6-78cf-464d-81ca-8668e8c36993
+      iscommand: false
+      name: Sessions deleted.
+      script: Sleep
+      type: regular
+      version: -1
+    taskid: b3ccc3f6-78cf-464d-81ca-8668e8c36993
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 1340,
+          "y": 1950
+        }
+      }
+  "44":
+    id: "44"
+    ignoreworker: false
+    nexttasks:
+      '#none#':
+      - "30"
+    note: false
+    quietmode: 0
+    scriptarguments:
+      seconds:
+        simple: "120"
+    separatecontext: false
+    skipunavailable: false
+    task:
+      brand: ""
+      description: Sleep for X seconds
+      id: ca53e80f-9c3e-41ab-82c4-e295060233e9
+      iscommand: false
+      name: No Active Sessions.
+      script: Sleep
+      type: regular
+      version: -1
+    taskid: ca53e80f-9c3e-41ab-82c4-e295060233e9
+    timertriggers: []
+    type: regular
+    view: |-
+      {
+        "position": {
+          "x": 900,
+          "y": 1950
         }
       }
 version: -1
@@ -673,13 +738,13 @@ view: |-
     "linkLabelsPosition": {},
     "paper": {
       "dimensions": {
-        "height": 2135,
-        "width": 2530,
-        "x": 50,
+        "height": 2315,
+        "width": 2500,
+        "x": 70,
         "y": 50
       }
     }
   }
+fromversion: 6.0.0
 tests:
 - Test Playbook STA
-fromversion: 6.0.0

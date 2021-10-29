@@ -4,7 +4,7 @@ This integration enables you to process alerts from SafeNet Trusted Access (STA)
 You can execute these commands from the Cortex XSOAR CLI, as part of an automation, or in a playbook.
 After you successfully execute a command, a DBot message appears in the War Room with the command details.
 
-> **_NOTE :_**  Perform create, update and delete operations only for internal users or groups using commands. Such operations aren't recommended for synced users or groups using commands.
+> **_NOTE :_**  Perform create, update and delete operations  using commands only for internal users or groups. Such operations aren't recommended for synchronized users or groups.
 
 ### sta-get-user-list
 ***
@@ -155,7 +155,7 @@ Get the profile information for a specific user.
 
 ### sta-create-user
 ***
-Create new user in the tenant
+Create a new user in the tenant.
 
 
 #### Base Command
@@ -316,7 +316,7 @@ Update the profile for a specific user.
 
 ### sta-delete-user
 ***
-Delete user from the tenant.
+Delete a user from the tenant.
 
 
 #### Base Command
@@ -335,7 +335,7 @@ Delete user from the tenant.
 | --- | --- | --- |
 | STA.USER.ID | string | User ID of the user to be deleted from the tenant. | 
 | STA.USER.USERNAME | string | Username of the user to be deleted from the tenant. | 
-| STA.USER.DELETED | boolean | Returns true, if the user deleted from the tenant. | 
+| STA.USER.DELETED | boolean | Returns true, if the user is deleted from the tenant. | 
 
 
 #### Command Example
@@ -444,7 +444,7 @@ Return all the groups associated with a specific user.
 >### Groups associated with user - hellouser : 
 >|Id|Schema Version Number|Name|Description|Is Synchronized|
 >|---|---|---|---|---|
->| 50331650 | 1.0 | TestUnusualActivityGroup | User would be added to unusual activity group on denying Push Notification. | false |
+>| 50331650 | 1.0 | TestUnusualActivityGroup | Group for testing. | false |
 >| 50331652 | 1.0 | TestGroup0 | Group for testing. | false |
 
 
@@ -721,7 +721,7 @@ Delete group from the tenant.
 | --- | --- | --- |
 | STA.GROUP.ID | string | Group ID of the group to be deleted. | 
 | STA.GROUP.GROUPNAME | string | Name of the group to be deleted. | 
-| STA.GROUP.DELETED | boolean | Returns true, if the group deleted from the tenant. | 
+| STA.GROUP.DELETED | boolean | Returns true, if the group is deleted from the tenant. | 
 
 
 #### Command Example
@@ -1340,7 +1340,7 @@ Get sessions for a specific user.
 | STA.USER.SESSION.START | string | Session start timestamp. | 
 | STA.USER.SESSION.EXPIRY | string | Session end timestamp. | 
 | STA.USER.SESSION.APPLICATION.ID | string | Name of the application. | 
-| STA.USER.SESSION.APPLICATION.NAME | boolean | Returns true, if the user session deleted for an application. | 
+| STA.USER.SESSION.APPLICATION.NAME | boolean | Returns true, if the user session is deleted for an application. | 
 
 
 #### Command Example
@@ -1390,7 +1390,7 @@ Get sessions for a specific user.
 
 ### sta-delete-user-sessions
 ***
-Delete all the active SSO sessions for a specific user from the STA.
+Delete all the active SSO sessions for a specific user from STA.
 
 
 #### Base Command
@@ -1409,7 +1409,7 @@ Delete all the active SSO sessions for a specific user from the STA.
 | --- | --- | --- |
 | STA.USER.ID | string | User ID of the user. | 
 | STA.USER.USERNAME | string | Username of the user. | 
-| STA.USER.SESSION.DELETED | boolean | Returns true, if all the user SSO sessions deleted successfully. | 
+| STA.USER.SESSION.DELETED | boolean | Returns true, if all the user SSO sessions are deleted successfully. | 
 
 
 #### Command Example

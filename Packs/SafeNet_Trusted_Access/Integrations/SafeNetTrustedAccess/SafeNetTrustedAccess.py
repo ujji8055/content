@@ -68,7 +68,7 @@ class Client(BaseClient):
 
         for key, value in fields.items():
             if not value or value == "":
-                raise Exception(f"Please provide {key}.")
+                raise Exception(f"Please provide the value for {key}.")
 
     # Get paginated results from API endpoint URL.
     def get_paged_results_sta(self, uri, query_params=None, limit=None):

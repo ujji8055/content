@@ -1,5 +1,5 @@
 {
-    "description": "Classifies SafeNet Trusted Access account lockout alert.",
+    "description": "Classifies SafeNet Trusted Access account lockout alerts.",
     "feed": false,
     "id": "accccf10-97da-425d-840f-beac0233efb1",
     "keyTypeMap": {
